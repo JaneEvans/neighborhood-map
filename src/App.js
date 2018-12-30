@@ -4,6 +4,10 @@ import axios from 'axios';
 
 class App extends Component {
 
+  state = {
+    coffeeShops: []
+  }
+
   componentDidMount() {
     this.renderGoogleAPI();
     this.getCoffeeShops();
@@ -39,11 +43,13 @@ class App extends Component {
       section: "coffee",
       near: "seattle, wa",
       openNow: 1,
-      v:"20182507"
+      v:"20181212"
     }
 
     axios.get(endPoint + new URLSearchParams(parameters)).then(response => {
-      console.log(response.data.response.groups[0].items);
+      this.setState({
+        coffeeShops: response.data.response.groups[0].items
+      })
     }).catch(e => {
       console.log(e);
     })
