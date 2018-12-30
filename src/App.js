@@ -32,21 +32,23 @@ class App extends Component {
   }
 
   getCoffeeShops = () => {
-    const endPoint = "https://api.yelp.com/v3/businesses/search?";
+    const endPoint = "https://api.foursquare.com/v2/venues/explore?";
     const parameters = {
-      // client_id: "N_KC2ejNObeqpxK8finSaw",
-      API_KEY: "tUsJKfMZ-SyZFdcTJwrDjVHjZHr80u52NzvF4SosPYr084G1d9NHKgfawuhtp49ltY5xuvUKtwfTf0XsNWT4WI_ILmm42xMePH-eWWQbEcVe54YB0KnxWWu3oLMmXHYx",
-      location: "Seattle, WA",
-      categories: "coffee",
-      open_now: true
-    };
+      client_id: "LY3VCLOLF2REAZE5GYWGDKPPYZJCUV2W42P1421UNMIUXR4I",
+      client_secret: "DGTB0YFUFVD2ISY2NYK2A1JA2SB4QHD0NZNKRUEYAFEJYUD1",
+      section: "coffee",
+      near: "seattle, wa",
+      openNow: 1,
+      v:"20182507"
+    }
 
     axios.get(endPoint + new URLSearchParams(parameters)).then(response => {
-      console.log(response);
-    }).catch(error =>{
-      console.log("ERROR!: " + error);
+      console.log(response.data.response.groups[0].items);
+    }).catch(e => {
+      console.log(e);
     })
   }
+
 
   render() {
     return (
