@@ -18,6 +18,9 @@ class CoffeeApp extends Component {
       zoom: 13
     });
 
+    let markers = [];
+    let largeInfowindow = new window.google.maps.InfoWindow();
+
     this.state.coffeeShops.map(coffeeShop => {
       let position = {lat:coffeeShop.venue.location.lat, lng:coffeeShop.venue.location.lng};
       let title = coffeeShop.venue.name;
@@ -30,9 +33,39 @@ class CoffeeApp extends Component {
         animation: window.google.maps.Animation.DROP,
         id: id
       })
+      markers.push(marker);
+
+      marker.addListener('click', function() {
+        if (largeInfowindow.marker !== marker) {
+          largeInfowindow.marker = marker;
+          largeInfowindow.setContent('<div>' + marker.title + '</div>');
+          largeInfowindow.open(map, marker);
+          // Make sure the marker property is cleared if the infowindow is closed.
+          largeInfowindow.addListener('closeclick', function() {
+            largeInfowindow.marker = null;
+          });
+        }
+      });
 
     });
+
+    document.getElementById('show-listings').addEventListener('click', function(){
+      let bounds = new window.google.maps.LatLngBounds();
+      // Extend the boundaries of the map for each marker and display the marker
+      markers.map(marker => {
+        marker.setMap(map);
+        bounds.extend(marker.position);
+      })
+      map.fitBounds(bounds);
+    });
+
+    document.getElementById('hide-listings').addEventListener('click', function(){
+      markers.map(marker => {
+        marker.setMap(null);
+      })
+    });
   }
+
 
   renderGoogleAPI = () => {
     getHTMLScript("https://maps.googleapis.com/maps/api/js?key=AIzaSyAXcXV-sDo2jjYfRLVCmOIfhC7umOjkYGk&v=3&callback=initMap");
