@@ -2,31 +2,36 @@ import React, { Component } from 'react';
 import './App.css';
 import axios from 'axios';
 
-class App extends Component {
+class CoffeeApp extends Component {
 
   state = {
     coffeeShops: []
   }
 
   componentDidMount() {
-    this.renderGoogleAPI();
     this.getCoffeeShops();
   }
 
   initMap = () => {
-    // Constructor creates a new map - only center and zoom are required.
     const map = new window.google.maps.Map(document.getElementById('map'), {
       center: {lat: 47.6079958, lng: -122.3320709},
-      zoom: 14
+      zoom: 13
     });
 
-    const tribeca = {lat: 47.6126869, lng: -122.3255862};
-    const marker = new window.google.maps.Marker({
-      position: tribeca,
-      map: map,
-      title: 'Starbucks Reserve Roastery'
-    });
+    this.state.coffeeShops.map(coffeeShop => {
+      let position = {lat:coffeeShop.venue.location.lat, lng:coffeeShop.venue.location.lng};
+      let title = coffeeShop.venue.name;
+      let id = coffeeShop.venue.id;
 
+      let marker = new window.google.maps.Marker({
+        map:map,
+        position: position,
+        title: title,
+        animation: window.google.maps.Animation.DROP,
+        id: id
+      })
+
+    });
   }
 
   renderGoogleAPI = () => {
@@ -49,7 +54,7 @@ class App extends Component {
     axios.get(endPoint + new URLSearchParams(parameters)).then(response => {
       this.setState({
         coffeeShops: response.data.response.groups[0].items
-      })
+      }, this.renderGoogleAPI())
     }).catch(e => {
       console.log(e);
     })
@@ -87,5 +92,4 @@ function getHTMLScript(url){
   index.parentNode.insertBefore(script, index);
 }
 
-
-export default App;
+export default CoffeeApp;
