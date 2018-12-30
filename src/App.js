@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './App.css';
 import axios from 'axios';
+import coffee_icon from './icon/coffee_icon.png';
 
 class CoffeeApp extends Component {
 
@@ -12,15 +13,39 @@ class CoffeeApp extends Component {
     this.getCoffeeShops();
   }
 
+  getCoffeeShops = () => {
+    const endPoint = "https://api.foursquare.com/v2/venues/explore?";
+    const parameters = {
+      client_id: "LY3VCLOLF2REAZE5GYWGDKPPYZJCUV2W42P1421UNMIUXR4I",
+      client_secret: "DGTB0YFUFVD2ISY2NYK2A1JA2SB4QHD0NZNKRUEYAFEJYUD1",
+      section: "coffee",
+      near: "seattle, wa",
+      query: 'best',
+      openNow: 1,
+      // sortByDistance: 1,
+      // radius:5000,
+      v:"20181212"
+    }
+
+    axios.get(endPoint + new URLSearchParams(parameters)).then(response => {
+      this.setState({
+        coffeeShops: response.data.response.groups[0].items
+      }, this.renderGoogleAPI())
+    }).catch(e => {
+      console.log(e);
+    })
+  }
+
   initMap = () => {
     const map = new window.google.maps.Map(document.getElementById('map'), {
       center: {lat: 47.6079958, lng: -122.3320709},
-      zoom: 13
+      zoom: 15
     });
 
     let markers = [];
-    let largeInfowindow = new window.google.maps.InfoWindow();
+    const largeInfowindow = new window.google.maps.InfoWindow();
 
+    //Create dynamic markers on initialize.
     this.state.coffeeShops.map(coffeeShop => {
       let position = {lat:coffeeShop.venue.location.lat, lng:coffeeShop.venue.location.lng};
       let title = coffeeShop.venue.name;
@@ -31,14 +56,23 @@ class CoffeeApp extends Component {
         position: position,
         title: title,
         animation: window.google.maps.Animation.DROP,
-        id: id
+        id: id,
+        icon: {
+          url: coffee_icon,
+          scaledSize: new window.google.maps.Size(40, 40),
+          size: new window.google.maps.Size(50, 50),
+        }
       })
       markers.push(marker);
-
+      
+      // Create an onclick event to open an infowindow at each marker.
+      // We only allow one infowindow which will open at the marker that is clicked, 
+      // and populate based on that markers position.
+      let infoWindowContent = marker.title;
       marker.addListener('click', function() {
         if (largeInfowindow.marker !== marker) {
           largeInfowindow.marker = marker;
-          largeInfowindow.setContent('<div>' + marker.title + '</div>');
+          largeInfowindow.setContent(infoWindowContent);
           largeInfowindow.open(map, marker);
           // Make sure the marker property is cleared if the infowindow is closed.
           largeInfowindow.addListener('closeclick', function() {
@@ -55,6 +89,7 @@ class CoffeeApp extends Component {
       markers.map(marker => {
         marker.setMap(map);
         bounds.extend(marker.position);
+        marker.animation = window.google.maps.Animation.DROP;
       })
       map.fitBounds(bounds);
     });
@@ -64,6 +99,7 @@ class CoffeeApp extends Component {
         marker.setMap(null);
       })
     });
+
   }
 
 
@@ -73,25 +109,7 @@ class CoffeeApp extends Component {
     window.initMap = this.initMap;
   }
 
-  getCoffeeShops = () => {
-    const endPoint = "https://api.foursquare.com/v2/venues/explore?";
-    const parameters = {
-      client_id: "LY3VCLOLF2REAZE5GYWGDKPPYZJCUV2W42P1421UNMIUXR4I",
-      client_secret: "DGTB0YFUFVD2ISY2NYK2A1JA2SB4QHD0NZNKRUEYAFEJYUD1",
-      section: "coffee",
-      near: "seattle, wa",
-      openNow: 1,
-      v:"20181212"
-    }
 
-    axios.get(endPoint + new URLSearchParams(parameters)).then(response => {
-      this.setState({
-        coffeeShops: response.data.response.groups[0].items
-      }, this.renderGoogleAPI())
-    }).catch(e => {
-      console.log(e);
-    })
-  }
 
 
   render() {
@@ -104,8 +122,8 @@ class CoffeeApp extends Component {
           <div className="options-box">
             <h2>Find Seattle Best Coffee Shop</h2>
             <div>
-              <input id="show-listings" type="button" value="Show Listings"/>
-              <input id="hide-listings" type="button" value="Hide Listings"/>
+              <input id="show-listings" type="button" value="Show All"/>
+              <input id="hide-listings" type="button" value="Hide All"/>
             </div>
           </div>
           <div id="map"/>
