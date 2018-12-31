@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './App.css';
 import axios from 'axios';
 import coffee_icon from './icon/coffee_icon.png';
+import starbucks_icon from './icon/starbucks_icon.png';
 
 class CoffeeApp extends Component {
 
@@ -50,19 +51,25 @@ class CoffeeApp extends Component {
       let position = {lat:coffeeShop.venue.location.lat, lng:coffeeShop.venue.location.lng};
       let title = coffeeShop.venue.name;
       let id = coffeeShop.venue.id;
+      let icon = {
+        url: coffee_icon,
+        scaledSize: new window.google.maps.Size(40, 40),
+        size: new window.google.maps.Size(50, 50),
+      }
 
+      if (title.includes("Starbucks")){
+        icon.url = starbucks_icon;
+      }
+      
       let marker = new window.google.maps.Marker({
         map:map,
         position: position,
         title: title,
         animation: window.google.maps.Animation.DROP,
         id: id,
-        icon: {
-          url: coffee_icon,
-          scaledSize: new window.google.maps.Size(40, 40),
-          size: new window.google.maps.Size(50, 50),
-        }
+        icon: icon
       })
+
       markers.push(marker);
       
       // Create an onclick event to open an infowindow at each marker.
