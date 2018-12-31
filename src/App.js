@@ -21,7 +21,6 @@ class CoffeeApp extends Component {
       client_secret: "DGTB0YFUFVD2ISY2NYK2A1JA2SB4QHD0NZNKRUEYAFEJYUD1",
       section: "coffee",
       near: "seattle, wa",
-      query: 'best',
       openNow: 1,
       // sortByDistance: 1,
       // radius:5000,
@@ -40,7 +39,7 @@ class CoffeeApp extends Component {
   initMap = () => {
     const map = new window.google.maps.Map(document.getElementById('map'), {
       center: {lat: 47.6079958, lng: -122.3320709},
-      zoom: 15
+      zoom: 14
     });
 
     let markers = [];
@@ -51,6 +50,7 @@ class CoffeeApp extends Component {
       let position = {lat:coffeeShop.venue.location.lat, lng:coffeeShop.venue.location.lng};
       let title = coffeeShop.venue.name;
       let id = coffeeShop.venue.id;
+      let address = coffeeShop.venue.location.address;
 
       // Customized marker icons
       let icon = {
@@ -76,9 +76,9 @@ class CoffeeApp extends Component {
       // Create an onclick event to open an infowindow at each marker.
       // We only allow one infowindow which will open at the marker that is clicked, 
       // and populate based on that markers position.
-      let infoWindowContent = marker.title;
+      
       marker.addListener('click', ()=> {
-
+        // Add animation to clicked marker
         if (marker.getAnimation() !== null) {
           marker.setAnimation(null);
         } else {
@@ -87,13 +87,43 @@ class CoffeeApp extends Component {
         }
 
         if (largeInfowindow.marker !== marker) {
+          // Clear the infowindow content to give the streetview time to load.
+          largeInfowindow.setContent('');
           largeInfowindow.marker = marker;
-          largeInfowindow.setContent(infoWindowContent);
-          largeInfowindow.open(map, marker);
+
+          // largeInfowindow.setContent(infoWindowContent);
+          // largeInfowindow.open(map, marker);
+
           // Make sure the marker property is cleared if the infowindow is closed.
           largeInfowindow.addListener('closeclick', () => {
             largeInfowindow.marker = null;
           });
+
+          const request = {
+            location: map.getCenter(),
+            query: marker.title
+          }
+          const service = new window.google.maps.places.PlacesService(map);
+          service.textSearch(request, (place, status)=>{
+            if (status === window.google.maps.places.PlacesServiceStatus.OK){
+              let imgSrc = place[0].photos[0].getUrl({'maxWidth': 150, 'maxHeight': 150});
+              let infoWindowContent = `
+                <div id="photo"><img src= ${imgSrc}></div> 
+                <div>
+                  <div id='shop-name'>${title}</div>
+                  <div><strong>Address: </strong>${address}</div>
+                </div> 
+                `;
+
+                largeInfowindow.setContent(infoWindowContent);
+
+            } else {
+              largeInfowindow.setContent(`<div id='shop-name'>${marker.title}</div><div> <strong>Address: </strong>${address}</div><div>No Street View Found</div>`);
+            }
+
+          });
+
+          largeInfowindow.open(map, marker);
         }
       });
 
@@ -120,7 +150,7 @@ class CoffeeApp extends Component {
 
 
   renderGoogleAPI = () => {
-    getHTMLScript("https://maps.googleapis.com/maps/api/js?key=AIzaSyAXcXV-sDo2jjYfRLVCmOIfhC7umOjkYGk&v=3&callback=initMap");
+    getHTMLScript("https://maps.googleapis.com/maps/api/js?key=AIzaSyAXcXV-sDo2jjYfRLVCmOIfhC7umOjkYGk&v=3&libraries=places&callback=initMap");
 
     window.initMap = this.initMap;
   }

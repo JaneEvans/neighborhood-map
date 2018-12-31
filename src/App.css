@@ -70,3 +70,18 @@ h2 {
   width: 340px;
   position: fixed;
 }
+
+#photo {
+  width: 150px;
+  height: 150px;
+}
+
+#shop-name {
+  font-family: 'Poiret One', cursive;
+  font-size: 15px;
+  font-weight: bold;
+}
+
+.text {
+  font-size: 12px;
+}
