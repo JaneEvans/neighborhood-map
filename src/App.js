@@ -50,7 +50,7 @@ class CoffeeApp extends Component {
       let position = {lat:coffeeShop.venue.location.lat, lng:coffeeShop.venue.location.lng};
       let title = coffeeShop.venue.name;
       let id = coffeeShop.venue.id;
-      let address = coffeeShop.venue.location.address;
+      let venue_address = coffeeShop.venue.location.address;
 
       // Customized marker icons
       let icon = {
@@ -106,6 +106,7 @@ class CoffeeApp extends Component {
           const service = new window.google.maps.places.PlacesService(map);
           service.textSearch(request, (place, status)=>{
             if (status === window.google.maps.places.PlacesServiceStatus.OK){
+              let address = place[0].formatted_address;
               let imgSrc = place[0].photos[0].getUrl({'maxWidth': 150, 'maxHeight': 150});
               let infoWindowContent = `
                 <div id="photo"><img src= ${imgSrc}></div> 
@@ -118,7 +119,7 @@ class CoffeeApp extends Component {
                 largeInfowindow.setContent(infoWindowContent);
 
             } else {
-              largeInfowindow.setContent(`<div id='shop-name'>${marker.title}</div><div> <strong>Address: </strong>${address}</div><div>No Street View Found</div>`);
+              largeInfowindow.setContent(`<div id='shop-name'>${marker.title}</div><div> <strong>Address: </strong>${venue_address}</div><div>No Street View Found</div>`);
             }
 
           });
