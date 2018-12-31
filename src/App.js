@@ -46,19 +46,20 @@ class CoffeeApp extends Component {
     let markers = [];
     const largeInfowindow = new window.google.maps.InfoWindow();
 
-    //Create dynamic markers on initialize.
+    // Create dynamic markers on initialize.
     this.state.coffeeShops.map(coffeeShop => {
       let position = {lat:coffeeShop.venue.location.lat, lng:coffeeShop.venue.location.lng};
       let title = coffeeShop.venue.name;
       let id = coffeeShop.venue.id;
+
+      // Customized marker icons
       let icon = {
         url: coffee_icon,
-        scaledSize: new window.google.maps.Size(40, 40),
-        size: new window.google.maps.Size(50, 50),
+        scaledSize: new window.google.maps.Size(30, 30),
       }
-
       if (title.includes("Starbucks")){
         icon.url = starbucks_icon;
+        icon.scaledSize = new window.google.maps.Size(40, 40);
       }
       
       let marker = new window.google.maps.Marker({
@@ -76,13 +77,21 @@ class CoffeeApp extends Component {
       // We only allow one infowindow which will open at the marker that is clicked, 
       // and populate based on that markers position.
       let infoWindowContent = marker.title;
-      marker.addListener('click', function() {
+      marker.addListener('click', ()=> {
+
+        if (marker.getAnimation() !== null) {
+          marker.setAnimation(null);
+        } else {
+          marker.setAnimation(window.google.maps.Animation.BOUNCE);
+          setTimeout(()=>{marker.setAnimation(null); }, 600);
+        }
+
         if (largeInfowindow.marker !== marker) {
           largeInfowindow.marker = marker;
           largeInfowindow.setContent(infoWindowContent);
           largeInfowindow.open(map, marker);
           // Make sure the marker property is cleared if the infowindow is closed.
-          largeInfowindow.addListener('closeclick', function() {
+          largeInfowindow.addListener('closeclick', () => {
             largeInfowindow.marker = null;
           });
         }
@@ -90,18 +99,18 @@ class CoffeeApp extends Component {
 
     });
 
-    document.getElementById('show-listings').addEventListener('click', function(){
+    document.getElementById('show-listings').addEventListener('click', ()=>{
       let bounds = new window.google.maps.LatLngBounds();
       // Extend the boundaries of the map for each marker and display the marker
       markers.map(marker => {
         marker.setMap(map);
         bounds.extend(marker.position);
-        marker.animation = window.google.maps.Animation.DROP;
+        marker.setAnimation(window.google.maps.Animation.DROP);
       })
       map.fitBounds(bounds);
     });
 
-    document.getElementById('hide-listings').addEventListener('click', function(){
+    document.getElementById('hide-listings').addEventListener('click', ()=>{
       markers.map(marker => {
         marker.setMap(null);
       })
