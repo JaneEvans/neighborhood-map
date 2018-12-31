@@ -172,6 +172,10 @@ class CoffeeApp extends Component {
               <input id="show-listings" type="button" value="Show All"/>
               <input id="hide-listings" type="button" value="Hide All"/>
             </div>
+            <div>
+              <input id="search-text" type="text" placeholder="Ex: Starbucks"/>
+              <input id="search" type="button" value="Search"/>
+            </div>
           </div>
           <div id="map"/>
         </div>
