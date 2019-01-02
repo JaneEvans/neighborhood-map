@@ -3,11 +3,25 @@ import './App.css';
 import axios from 'axios';
 import coffee_icon from './icon/coffee_icon.png';
 import starbucks_icon from './icon/starbucks_icon.png';
+// import serializeForm from 'form-serialize';
+
 
 class CoffeeApp extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      map:'',
+      markers:[],
+      coffeeShops: [],
+      searchValues:{
+        duration: "5",
+        mode: "BICYCLING",
+        from:"Pike Market"
+      }
+    };
 
-  state = {
-    coffeeShops: []
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   componentDidMount() {
@@ -21,13 +35,14 @@ class CoffeeApp extends Component {
       client_secret: "DGTB0YFUFVD2ISY2NYK2A1JA2SB4QHD0NZNKRUEYAFEJYUD1",
       section: "coffee",
       near: "seattle, wa",
+      query: "best",
       openNow: 1,
-      // sortByDistance: 1,
-      // radius:5000,
+      limit:50,
       v:"20181212"
     }
 
     axios.get(endPoint + new URLSearchParams(parameters)).then(response => {
+      // console.log(response.data.response);
       this.setState({
         coffeeShops: response.data.response.groups[0].items
       }, this.renderGoogleAPI())
@@ -36,13 +51,16 @@ class CoffeeApp extends Component {
     })
   }
 
+
   initMap = () => {
     const map = new window.google.maps.Map(document.getElementById('map'), {
       center: {lat: 47.6079958, lng: -122.3320709},
-      zoom: 14
+      zoom: 13
     });
 
-    let markers = [];
+    this.setState({map:map});
+
+    // let markers = [];
     const largeInfowindow = new window.google.maps.InfoWindow();
 
     // Create dynamic markers on initialize.
@@ -70,8 +88,8 @@ class CoffeeApp extends Component {
         id: id,
         icon: icon
       })
-
-      markers.push(marker);
+      
+      this.setState({ markers: [...this.state.markers, marker] })
       
       // Create an onclick event to open an infowindow at each marker.
       // We only allow one infowindow which will open at the marker that is clicked, 
@@ -91,9 +109,6 @@ class CoffeeApp extends Component {
           largeInfowindow.setContent('');
           largeInfowindow.marker = marker;
 
-          // largeInfowindow.setContent(infoWindowContent);
-          // largeInfowindow.open(map, marker);
-
           // Make sure the marker property is cleared if the infowindow is closed.
           largeInfowindow.addListener('closeclick', () => {
             largeInfowindow.marker = null;
@@ -101,25 +116,32 @@ class CoffeeApp extends Component {
 
           const request = {
             location: map.getCenter(),
-            query: marker.title
+            query: title
           }
           const service = new window.google.maps.places.PlacesService(map);
           service.textSearch(request, (place, status)=>{
             if (status === window.google.maps.places.PlacesServiceStatus.OK){
+              // console.log(place[0]);
               let address = place[0].formatted_address;
+              let rating = place[0].rating;
               let imgSrc = place[0].photos[0].getUrl({'maxWidth': 150, 'maxHeight': 150});
               let infoWindowContent = `
                 <div id="photo"><img src= ${imgSrc}></div> 
                 <div>
                   <div id='shop-name'>${title}</div>
                   <div><strong>Address: </strong>${address}</div>
+                  <div><strong>Rating: </strong>${rating}/5.0 </div>
                 </div> 
                 `;
 
                 largeInfowindow.setContent(infoWindowContent);
 
             } else {
-              largeInfowindow.setContent(`<div id='shop-name'>${marker.title}</div><div> <strong>Address: </strong>${venue_address}</div><div>No Street View Found</div>`);
+              largeInfowindow.setContent(`
+                <div id='shop-name'>${marker.title}</div>
+                <div><strong>Address: </strong>${venue_address}</div>
+                <div>No Shop Photo Found</div>
+                `);
             }
 
           });
@@ -130,53 +152,199 @@ class CoffeeApp extends Component {
 
     });
 
-    document.getElementById('show-listings').addEventListener('click', ()=>{
-      let bounds = new window.google.maps.LatLngBounds();
-      // Extend the boundaries of the map for each marker and display the marker
-      markers.map(marker => {
-        marker.setMap(map);
-        bounds.extend(marker.position);
-        marker.setAnimation(window.google.maps.Animation.DROP);
-      })
-      map.fitBounds(bounds);
-    });
-
-    document.getElementById('hide-listings').addEventListener('click', ()=>{
-      markers.map(marker => {
-        marker.setMap(null);
-      })
-    });
 
   }
 
 
   renderGoogleAPI = () => {
-    getHTMLScript("https://maps.googleapis.com/maps/api/js?key=AIzaSyAXcXV-sDo2jjYfRLVCmOIfhC7umOjkYGk&v=3&libraries=places&callback=initMap");
+    this.getHTMLScript("https://maps.googleapis.com/maps/api/js?key=AIzaSyAXcXV-sDo2jjYfRLVCmOIfhC7umOjkYGk&v=3&libraries=places&callback=initMap");
 
     window.initMap = this.initMap;
   }
 
+  getHTMLScript = (url) => {
+    const index = window.document.getElementsByTagName('script')[0];
+    const script = window.document.createElement('script');
+    script.src = url;
+    script.async = true;
+    script.defer = true;
+    index.parentNode.insertBefore(script, index);
+  }
+
+  showListing = ()=>{
+    let bounds = new window.google.maps.LatLngBounds();
+    // Extend the boundaries of the map for each marker and display the marker
+    this.state.markers.map(marker => {
+      marker.setMap(this.state.map);
+      bounds.extend(marker.position);
+      marker.setAnimation(window.google.maps.Animation.DROP);
+    })
+    this.state.map.fitBounds(bounds);
+  }
+
+  hideListing = ()=>{
+    this.state.markers.map(marker => {
+      marker.setMap(null);
+    })
+  }
+
+  handleChange = (e)=> {
+    // const values = serializeForm(e.target, {hash: true});
+    // this.setState({searhValue:values});
+    const value = e.target.value;
+    const name = e.target.name;
+    let searchValues = this.state.searchValues;
+    searchValues[name] = value;
+
+    this.setState({searchValues})
+    
+    console.log(this.state.searchValues)
+  }
+
+  handleSubmit = (e) => {
+    e.preventDefault();
+    // const values = serializeForm(e.target, {hash: true})
+    // this.setState({searhValue:values})
+    // console.log(values);
+    this.searchWithinTime();
+    console.log(this.state.searchValues);
+}
+
+    // This function allows the user to input a desired travel time, in
+    // minutes, and a travel mode, and a location - and only show the listings
+    // that are within that travel time (via that travel mode) of the location
+  searchWithinTime = () => {
+    // Initialize the distance matrix service.
+    const distanceMatrixService = new window.google.maps.DistanceMatrixService();
+    const address = this.state.searhValue.from;
+    // Check to make sure the place entered isn't blank.
+    console.log(address);
+    if (address === '') {
+      window.alert('You must enter an address.');
+    } else {
+      this.hideListing();
+      // Use the distance matrix service to calculate the duration of the
+      // routes between all our markers, and the destination address entered
+      // by the user. Then put all the origins into an origin matrix.
+      let origins = [];
+      this.state.markers.map(marker => {
+        origins.push(marker.position);
+      }) 
+      
+      const mode = this.state.searhValue.mode;
+      // Now that both the origins and destination are defined, get all the
+      // info for the distances between them.
+      distanceMatrixService.getDistanceMatrix({
+        origins: origins,
+        destinations: [address],
+        travelMode: window.google.maps.TravelMode[mode],
+        unitSystem: window.google.maps.UnitSystem.IMPERIAL,
+      }, function(response, status) {
+        if (status !== window.google.maps.DistanceMatrixStatus.OK) {
+          window.alert('Error was: ' + status);
+        } else {
+          // this.displayMarkersWithinTime(response);
+          console.log(response);
+        }
+      });
+    }
+    
+  }
+
+      // This function will go through each of the results, and,
+      // if the distance is LESS than the value in the picker, show it on the map.
+    displayMarkersWithinTime = (response) => {
+      const maxDuration = this.state.searhValue.duration;
+      const origins = response.originAddresses;
+      const destinations = response.destinationAddresses;
+      // Parse through the results, and get the distance and duration of each.
+      // Because there might be  multiple origins and destinations we have a nested loop
+      // Then, make sure at least 1 result was found.
+      console.log(response);
+      // let atLeastOne = false;
+      // for (var i = 0; i < origins.length; i++) {
+      //   var results = response.rows[i].elements;
+      //   for (var j = 0; j < results.length; j++) {
+      //     var element = results[j];
+      //     if (element.status === "OK") {
+      //       // The distance is returned in feet, but the TEXT is in miles. If we wanted to switch
+      //       // the function to show markers within a user-entered DISTANCE, we would need the
+      //       // value for distance, but for now we only need the text.
+      //       var distanceText = element.distance.text;
+      //       // Duration value is given in seconds so we make it MINUTES. We need both the value
+      //       // and the text.
+      //       var duration = element.duration.value / 60;
+      //       var durationText = element.duration.text;
+      //       if (duration <= maxDuration) {
+      //         //the origin [i] should = the markers[i]
+      //         this.state.markers[i].setMap(this.state.map);
+      //         atLeastOne = true;
+      //         // Create a mini infowindow to open immediately and contain the
+      //         // distance and duration
+      //         var infowindow = new window.google.maps.InfoWindow({
+      //           content: durationText + ' away, ' + distanceText
+      //         });
+      //         infowindow.open(this.state.map, this.state.markers[i]);
+      //         // Put this in so that this small window closes if the user clicks
+      //         // the marker, when the big infowindow opens
+      //         markers[i].infowindow = infowindow;
+      //         window.google.maps.event.addListener(this.state.markers[i], 'click', function() {
+      //           this.infowindow.close();
+      //         });
+      //       }
+      //     }
+      //   }
+      // }
+      // if (!atLeastOne) {
+      //   window.alert('We could not find any locations within that distance!');
+      // }
+    }
 
 
-
+  // Render App ---------------------
   render() {
     return (
       <div className='canvas'>
         <div className="head">
           <h1>Seattle Coffee Radar</h1>
         </div>
+        
         <div className="container">
           <div className="options-box">
             <h2>Find Seattle Best Coffee Shop</h2>
-            <div>
-              <input id="show-listings" type="button" value="Show All"/>
-              <input id="hide-listings" type="button" value="Hide All"/>
+            <div id="show-hide-listings">
+              <input id="show-listings" type="button" value="Show Top 50 ☕" onClick={this.showListing}/>
+              <input id="hide-listings" type="button" value="Hide All ☕" onClick={this.hideListing}/>
             </div>
-            <div>
-              <input id="search-text" type="text" placeholder="Ex: Starbucks"/>
-              <input id="search" type="button" value="Search"/>
-            </div>
+            <hr className="shadow"/>
+            
+            <form id="search-form" onSubmit={this.handleSubmit} onChange={this.handleChange}>
+              <h3>Search Your Coffee Shop</h3>
+              <hr className="gradient"/>
+              <div className="search-div">
+                <span className="text"> From </span>
+                <input id="search-within-time-text" name='from' type="text" placeholder="Ex: Pike Market" />
+              </div>
+              <div className="search-div">
+                <span className="text"> Transportation </span>
+                <div className="radio-text">
+                  <ul><input type="radio" name='mode' value="WALKING" defaultChecked />🚶 Walk </ul>
+                  <ul><input type="radio" name='mode' value="BICYCLING" />🚲 Bike </ul>
+                  <ul><input type="radio" name='mode' value="DRIVING" />🚗 Drive </ul>
+                </div>
+              </div>
+              <div className="search-div">
+                <span className="text"> Within </span>
+                <div className="radio-text">
+                  <ul><input type="radio" name='duration' value="5" defaultChecked />5 min </ul>
+                  <ul><input type="radio" name='duration' value="10" />10 min </ul>
+                  <ul><input type="radio" name='duration' value="15" />15 min </ul>
+                </div>
+              </div>
+              <button id="search-within-time">Go</button>
+            </form>
           </div>
+
           <div id="map"/>
         </div>
       </div>
@@ -184,14 +352,5 @@ class CoffeeApp extends Component {
   }
 }
 
-
-function getHTMLScript(url){
-  const index = window.document.getElementsByTagName('script')[0];
-  const script = window.document.createElement('script');
-  script.src = url;
-  script.async = true;
-  script.defer = true;
-  index.parentNode.insertBefore(script, index);
-}
 
 export default CoffeeApp;
