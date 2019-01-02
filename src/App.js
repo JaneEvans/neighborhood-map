@@ -15,8 +15,9 @@ class CoffeeApp extends Component {
       coffeeShops: [],
       searchValues:{
         duration: "5",
-        mode: "BICYCLING",
-        from:"Pike Market"
+        mode: "WALKING",
+        from:"",
+        open_now:false
       }
     };
 
@@ -36,15 +37,19 @@ class CoffeeApp extends Component {
       section: "coffee",
       near: "seattle, wa",
       query: "best",
-      openNow: 1,
-      limit:50,
+      // openNow: 1,
+      limit:25,
       v:"20181212"
     }
 
     axios.get(endPoint + new URLSearchParams(parameters)).then(response => {
       // console.log(response.data.response);
+      let validShops = response.data.response.groups[0].items.filter( item => 
+        item.venue.location.address !== undefined
+      )
+
       this.setState({
-        coffeeShops: response.data.response.groups[0].items
+        coffeeShops: validShops
       }, this.renderGoogleAPI())
     }).catch(e => {
       console.log(e);
@@ -60,7 +65,6 @@ class CoffeeApp extends Component {
 
     this.setState({map:map});
 
-    // let markers = [];
     const largeInfowindow = new window.google.maps.InfoWindow();
 
     // Create dynamic markers on initialize.
@@ -116,14 +120,16 @@ class CoffeeApp extends Component {
 
           const request = {
             location: map.getCenter(),
-            query: title
+            query: title + ', ' +venue_address
           }
           const service = new window.google.maps.places.PlacesService(map);
           service.textSearch(request, (place, status)=>{
             if (status === window.google.maps.places.PlacesServiceStatus.OK){
-              // console.log(place[0]);
+              console.log(place[0]);
               let address = place[0].formatted_address;
               let rating = place[0].rating;
+              let open = place[0].opening_hours.open_now ? 'Open' : 'Closed';
+
               let imgSrc = place[0].photos[0].getUrl({'maxWidth': 150, 'maxHeight': 150});
               let infoWindowContent = `
                 <div id="photo"><img src= ${imgSrc}></div> 
@@ -131,6 +137,7 @@ class CoffeeApp extends Component {
                   <div id='shop-name'>${title}</div>
                   <div><strong>Address: </strong>${address}</div>
                   <div><strong>Rating: </strong>${rating}/5.0 </div>
+                  <div>${open} Now </div>
                 </div> 
                 `;
 
@@ -151,14 +158,11 @@ class CoffeeApp extends Component {
       });
 
     });
-
-
   }
 
 
   renderGoogleAPI = () => {
     this.getHTMLScript("https://maps.googleapis.com/maps/api/js?key=AIzaSyAXcXV-sDo2jjYfRLVCmOIfhC7umOjkYGk&v=3&libraries=places&callback=initMap");
-
     window.initMap = this.initMap;
   }
 
@@ -189,25 +193,23 @@ class CoffeeApp extends Component {
   }
 
   handleChange = (e)=> {
-    // const values = serializeForm(e.target, {hash: true});
-    // this.setState({searhValue:values});
     const value = e.target.value;
     const name = e.target.name;
     let searchValues = this.state.searchValues;
-    searchValues[name] = value;
+    if(name !== 'open_now'){
+      searchValues[name] = value;
+    } else {
+      searchValues[name] = !searchValues[name];
+    }
 
-    this.setState({searchValues})
-    
-    console.log(this.state.searchValues)
+    this.setState({searchValues});
+    // console.log(this.state.searchValues)
   }
 
   handleSubmit = (e) => {
     e.preventDefault();
-    // const values = serializeForm(e.target, {hash: true})
-    // this.setState({searhValue:values})
-    // console.log(values);
     this.searchWithinTime();
-    console.log(this.state.searchValues);
+    // console.log(this.state.searchValues);
 }
 
     // This function allows the user to input a desired travel time, in
@@ -216,9 +218,9 @@ class CoffeeApp extends Component {
   searchWithinTime = () => {
     // Initialize the distance matrix service.
     const distanceMatrixService = new window.google.maps.DistanceMatrixService();
-    const address = this.state.searhValue.from;
+    const address = this.state.searchValues.from;
+
     // Check to make sure the place entered isn't blank.
-    console.log(address);
     if (address === '') {
       window.alert('You must enter an address.');
     } else {
@@ -230,8 +232,9 @@ class CoffeeApp extends Component {
       this.state.markers.map(marker => {
         origins.push(marker.position);
       }) 
+
       
-      const mode = this.state.searhValue.mode;
+      const mode = this.state.searchValues.mode;
       // Now that both the origins and destination are defined, get all the
       // info for the distances between them.
       distanceMatrixService.getDistanceMatrix({
@@ -254,50 +257,51 @@ class CoffeeApp extends Component {
       // This function will go through each of the results, and,
       // if the distance is LESS than the value in the picker, show it on the map.
     displayMarkersWithinTime = (response) => {
-      const maxDuration = this.state.searhValue.duration;
+      const maxDuration = this.state.searchValues.duration;
       const origins = response.originAddresses;
-      const destinations = response.destinationAddresses;
+      // const destinations = response.destinationAddresses;
       // Parse through the results, and get the distance and duration of each.
       // Because there might be  multiple origins and destinations we have a nested loop
       // Then, make sure at least 1 result was found.
-      console.log(response);
-      // let atLeastOne = false;
-      // for (var i = 0; i < origins.length; i++) {
-      //   var results = response.rows[i].elements;
-      //   for (var j = 0; j < results.length; j++) {
-      //     var element = results[j];
-      //     if (element.status === "OK") {
-      //       // The distance is returned in feet, but the TEXT is in miles. If we wanted to switch
-      //       // the function to show markers within a user-entered DISTANCE, we would need the
-      //       // value for distance, but for now we only need the text.
-      //       var distanceText = element.distance.text;
-      //       // Duration value is given in seconds so we make it MINUTES. We need both the value
-      //       // and the text.
-      //       var duration = element.duration.value / 60;
-      //       var durationText = element.duration.text;
-      //       if (duration <= maxDuration) {
-      //         //the origin [i] should = the markers[i]
-      //         this.state.markers[i].setMap(this.state.map);
-      //         atLeastOne = true;
-      //         // Create a mini infowindow to open immediately and contain the
-      //         // distance and duration
-      //         var infowindow = new window.google.maps.InfoWindow({
-      //           content: durationText + ' away, ' + distanceText
-      //         });
-      //         infowindow.open(this.state.map, this.state.markers[i]);
-      //         // Put this in so that this small window closes if the user clicks
-      //         // the marker, when the big infowindow opens
-      //         markers[i].infowindow = infowindow;
-      //         window.google.maps.event.addListener(this.state.markers[i], 'click', function() {
-      //           this.infowindow.close();
-      //         });
-      //       }
-      //     }
-      //   }
-      // }
-      // if (!atLeastOne) {
-      //   window.alert('We could not find any locations within that distance!');
-      // }
+
+      let atLeastOne = false;
+      for (var i = 0; i < origins.length; i++) {
+        var results = response.rows[i].elements;
+        for (var j = 0; j < results.length; j++) {
+          var element = results[j];
+          if (element.status === "OK") {
+            // The distance is returned in feet, but the TEXT is in miles. If we wanted to switch
+            // the function to show markers within a user-entered DISTANCE, we would need the
+            // value for distance, but for now we only need the text.
+            var distanceText = element.distance.text;
+            // Duration value is given in seconds so we make it MINUTES. We need both the value
+            // and the text.
+            var duration = element.duration.value / 60;
+            var durationText = element.duration.text;
+            if (duration <= maxDuration) {
+              //the origin [i] should = the markers[i]
+              this.state.markers[i].setMap(this.state.map);
+              atLeastOne = true;
+              // Create a mini infowindow to open immediately and contain the
+              // distance and duration
+              var infowindow = new window.google.maps.InfoWindow({
+                content: durationText + ' away, ' + distanceText
+              });
+              infowindow.open(this.state.map, this.state.markers[i]);
+              // Put this in so that this small window closes if the user clicks
+              // the marker, when the big infowindow opens
+              
+              // this.setState({markers[i].infowindow : infowindow})
+              window.google.maps.event.addListener(this.state.markers[i], 'click', function() {
+                this.infowindow.close();
+              });
+            }
+          }
+        }
+      }
+      if (!atLeastOne) {
+        window.alert('We could not find any locations within that distance!');
+      }
     }
 
 
@@ -313,7 +317,7 @@ class CoffeeApp extends Component {
           <div className="options-box">
             <h2>Find Seattle Best Coffee Shop</h2>
             <div id="show-hide-listings">
-              <input id="show-listings" type="button" value="Show Top 50 ☕" onClick={this.showListing}/>
+              <input id="show-listings" type="button" value="Show Best ☕" onClick={this.showListing}/>
               <input id="hide-listings" type="button" value="Hide All ☕" onClick={this.hideListing}/>
             </div>
             <hr className="shadow"/>
@@ -321,6 +325,7 @@ class CoffeeApp extends Component {
             <form id="search-form" onSubmit={this.handleSubmit} onChange={this.handleChange}>
               <h3>Search Your Coffee Shop</h3>
               <hr className="gradient"/>
+              <input type="checkbox" name='open_now' defaultChecked={this.state.checked}/>Open Now
               <div className="search-div">
                 <span className="text"> From </span>
                 <input id="search-within-time-text" name='from' type="text" placeholder="Ex: Pike Market" />
