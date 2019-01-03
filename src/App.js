@@ -17,7 +17,7 @@ class CoffeeApp extends Component {
         duration: "5",
         mode: "WALKING",
         from:"",
-        open_now:false
+        // open_now:true
       }
     };
 
@@ -27,7 +27,9 @@ class CoffeeApp extends Component {
 
   componentDidMount() {
     this.getCoffeeShops();
+
   }
+
 
   getCoffeeShops = () => {
     const endPoint = "https://api.foursquare.com/v2/venues/explore?";
@@ -329,7 +331,7 @@ class CoffeeApp extends Component {
             <form id="search-form" onSubmit={this.handleSubmit} onChange={this.handleChange}>
               <h3>Search Your Coffee Shop</h3>
               <hr className="gradient"/>
-              <input type="checkbox" name='open_now' defaultChecked={this.state.checked}/>Open Now
+              {/* <input type="checkbox" name='open_now' defaultChecked/>Open Now */}
               <div className="search-div">
                 <span className="text"> From </span>
                 <input id="search-within-time-text" name='from' type="text" placeholder="Ex: Pike Market" />
@@ -355,7 +357,12 @@ class CoffeeApp extends Component {
           </div>
 
           <div id="map"/>
+          <div id="footer">
+            Copyright (c) 2019 <a href="/"><strong>Seattle Coffee Radar</strong></a> All Rights Reserved.
+          </div>
         </div>
+
+        
       </div>
     );
   }
