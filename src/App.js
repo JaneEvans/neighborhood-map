@@ -37,7 +37,6 @@ class CoffeeApp extends Component {
       section: "coffee",
       near: "seattle, wa",
       query: "best",
-      // openNow: 1,
       limit:25,
       v:"20181212"
     }
@@ -98,7 +97,6 @@ class CoffeeApp extends Component {
       // Create an onclick event to open an infowindow at each marker.
       // We only allow one infowindow which will open at the marker that is clicked, 
       // and populate based on that markers position.
-      
       marker.addListener('click', ()=> {
         // Add animation to clicked marker
         if (marker.getAnimation() !== null) {
@@ -242,12 +240,12 @@ class CoffeeApp extends Component {
         destinations: [address],
         travelMode: window.google.maps.TravelMode[mode],
         unitSystem: window.google.maps.UnitSystem.IMPERIAL,
-      }, function(response, status) {
+      }, (response, status) => {
         if (status !== window.google.maps.DistanceMatrixStatus.OK) {
           window.alert('Error was: ' + status);
         } else {
-          // this.displayMarkersWithinTime(response);
-          console.log(response);
+          this.displayMarkersWithinTime(response);
+          // console.log(response);
         }
       });
     }
@@ -260,13 +258,19 @@ class CoffeeApp extends Component {
       const maxDuration = this.state.searchValues.duration;
       const origins = response.originAddresses;
       // const destinations = response.destinationAddresses;
+      console.log(origins)
       // Parse through the results, and get the distance and duration of each.
       // Because there might be  multiple origins and destinations we have a nested loop
       // Then, make sure at least 1 result was found.
 
       let atLeastOne = false;
+      // origins.map(origin)
+
+
+
       for (var i = 0; i < origins.length; i++) {
         var results = response.rows[i].elements;
+        console.log(results);
         for (var j = 0; j < results.length; j++) {
           var element = results[j];
           if (element.status === "OK") {
