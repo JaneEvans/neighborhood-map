@@ -13,6 +13,7 @@ class CoffeeApp extends Component {
       map:'',
       markers:[],
       coffeeShops: [],
+      searchPlace_marker:null,
       searchValues:{
         duration: "5",
         mode: "WALKING",
@@ -79,7 +80,7 @@ class CoffeeApp extends Component {
       // Customized marker icons
       let icon = {
         url: coffee_icon,
-        scaledSize: new window.google.maps.Size(30, 30),
+        scaledSize: new window.google.maps.Size(30, 30)
       }
       if (title.includes("Starbucks")){
         icon.url = starbucks_icon;
@@ -179,6 +180,9 @@ class CoffeeApp extends Component {
   }
 
   showListing = ()=>{
+    if (this.state.searchPlace_marker) {
+      this.state.searchPlace_marker.setMap(null);
+    } 
     let bounds = new window.google.maps.LatLngBounds();
     // Extend the boundaries of the map for each marker and display the marker
     this.state.markers.map(marker => {
@@ -211,9 +215,23 @@ class CoffeeApp extends Component {
     // fields in the form.
     autocomplete.addListener('place_changed', ()=> {
     // Get the place details from the autocomplete object.
+    if (this.state.searchPlace_marker) {
+      this.state.searchPlace_marker.setMap(null);
+    } 
     let place = autocomplete.getPlace();
     searchValues.from = place.name;
-    this.setState({searchValues});
+    console.log(place);
+
+    this.state.map.setCenter(place.geometry.location);
+
+    let searchPlace_marker = new window.google.maps.Marker({
+      map:this.state.map,
+      position: place.geometry.location,
+      title: place.name,
+      animation: window.google.maps.Animation.DROP
+    })
+
+    this.setState({searchValues, searchPlace_marker});
     });
 
   }
@@ -299,13 +317,12 @@ class CoffeeApp extends Component {
               //the origin[i] should = the markers[i]
               this.state.markers[i].setMap(this.state.map);
               atLeastOne = true;
-              console.log(this.state.markers[i])
+              // console.log(this.state.markers[i])
               // Create a mini infowindow to open immediately and contain the
               // distance and duration
               var infowindow = new window.google.maps.InfoWindow({
                 content: durationText + ' away, ' + distanceText
               });
-
 
               infowindow.open(this.state.map, this.state.markers[i]);
               // Put this in so that this small window closes if the user clicks
@@ -318,7 +335,6 @@ class CoffeeApp extends Component {
               });
             }
           }
-
         })
       }
 
@@ -327,7 +343,6 @@ class CoffeeApp extends Component {
       }
 
     }
-
 
 
   // Render App ---------------------
