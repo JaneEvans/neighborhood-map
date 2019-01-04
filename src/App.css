@@ -145,12 +145,17 @@ ul {
 }
 
 #footer {
-  background-color: #e7c85e;
-  color: #180f0f;
+  background-color: #4d4646;
+  color: #e7c85e;
   font-family: 'Poiret One', cursive;
   font-size: 8pt;
   letter-spacing: 1px;
   padding: 25px;
   text-align: center;
   text-transform: uppercase;
+}
+
+a {
+  color: #e7c85e;
+  font-weight: bold;
 }

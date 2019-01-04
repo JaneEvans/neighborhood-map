@@ -37,9 +37,9 @@ class CoffeeApp extends Component {
       client_id: "LY3VCLOLF2REAZE5GYWGDKPPYZJCUV2W42P1421UNMIUXR4I",
       client_secret: "DGTB0YFUFVD2ISY2NYK2A1JA2SB4QHD0NZNKRUEYAFEJYUD1",
       section: "coffee",
-      near: "seattle, wa",
+      near: "seattle",
       query: "best",
-      limit:25,
+      limit: 25,
       v:"20181212"
     }
 
@@ -61,12 +61,13 @@ class CoffeeApp extends Component {
   initMap = () => {
     const map = new window.google.maps.Map(document.getElementById('map'), {
       center: {lat: 47.6079958, lng: -122.3320709},
-      zoom: 13
+      zoom: 14
     });
 
     this.setState({map:map});
 
     const largeInfowindow = new window.google.maps.InfoWindow();
+    
 
     // Create dynamic markers on initialize.
     this.state.coffeeShops.map(coffeeShop => {
@@ -129,6 +130,7 @@ class CoffeeApp extends Component {
               let address = place[0].formatted_address;
               let rating = place[0].rating;
               let open = place[0].opening_hours.open_now ? 'Open' : 'Closed';
+              let price = place[0].price_level ? "$".repeat(place[0].price_level) : 'Unknown';
 
               let imgSrc = place[0].photos[0].getUrl({'maxWidth': 150, 'maxHeight': 150});
               let infoWindowContent = `
@@ -137,6 +139,7 @@ class CoffeeApp extends Component {
                   <div id='shop-name'>${title}</div>
                   <div><strong>Address: </strong>${address}</div>
                   <div><strong>Rating: </strong>${rating}/5.0 </div>
+                  <div><strong>Price: </strong>${price} </div>
                   <div>${open} Now </div>
                 </div> 
                 `;
@@ -147,7 +150,7 @@ class CoffeeApp extends Component {
               largeInfowindow.setContent(`
                 <div id='shop-name'>${marker.title}</div>
                 <div><strong>Address: </strong>${venue_address}</div>
-                <div>No Shop Photo Found</div>
+                <div>No Shop Details Found</div>
                 `);
             }
 
@@ -196,14 +199,23 @@ class CoffeeApp extends Component {
     const value = e.target.value;
     const name = e.target.name;
     let searchValues = this.state.searchValues;
-    if(name !== 'open_now'){
-      searchValues[name] = value;
-    } else {
-      searchValues[name] = !searchValues[name];
-    }
 
+    searchValues[name] = value;
     this.setState({searchValues});
-    // console.log(this.state.searchValues)
+
+    // Create the autocomplete object, restricting the search to geographical
+    // location types.
+    let autocomplete = new window.google.maps.places.Autocomplete((document.getElementById('search-within-time-text')), {types: ['geocode']});
+
+    // When the user selects an address from the dropdown, populate the address
+    // fields in the form.
+    autocomplete.addListener('place_changed', ()=> {
+    // Get the place details from the autocomplete object.
+    let place = autocomplete.getPlace();
+    searchValues.from = place.name;
+    this.setState({searchValues});
+    });
+
   }
 
   handleSubmit = (e) => {
@@ -260,55 +272,62 @@ class CoffeeApp extends Component {
       const maxDuration = this.state.searchValues.duration;
       const origins = response.originAddresses;
       // const destinations = response.destinationAddresses;
-      console.log(origins)
+      // console.log(response)
       // Parse through the results, and get the distance and duration of each.
       // Because there might be  multiple origins and destinations we have a nested loop
       // Then, make sure at least 1 result was found.
 
       let atLeastOne = false;
       // origins.map(origin)
+      for (let i = 0; i < origins.length; i++) {
+        let results = response.rows[i].elements;
+        // console.log(results);
+        results.map(result => {
+          let element = result;
 
-
-
-      for (var i = 0; i < origins.length; i++) {
-        var results = response.rows[i].elements;
-        console.log(results);
-        for (var j = 0; j < results.length; j++) {
-          var element = results[j];
           if (element.status === "OK") {
+
             // The distance is returned in feet, but the TEXT is in miles. If we wanted to switch
             // the function to show markers within a user-entered DISTANCE, we would need the
             // value for distance, but for now we only need the text.
-            var distanceText = element.distance.text;
+            const distanceText = element.distance.text;
             // Duration value is given in seconds so we make it MINUTES. We need both the value
             // and the text.
-            var duration = element.duration.value / 60;
-            var durationText = element.duration.text;
+            const duration = element.duration.value / 60;
+            const durationText = element.duration.text;
             if (duration <= maxDuration) {
-              //the origin [i] should = the markers[i]
+              //the origin[i] should = the markers[i]
               this.state.markers[i].setMap(this.state.map);
               atLeastOne = true;
+              console.log(this.state.markers[i])
               // Create a mini infowindow to open immediately and contain the
               // distance and duration
               var infowindow = new window.google.maps.InfoWindow({
                 content: durationText + ' away, ' + distanceText
               });
+
+
               infowindow.open(this.state.map, this.state.markers[i]);
               // Put this in so that this small window closes if the user clicks
               // the marker, when the big infowindow opens
-              
-              // this.setState({markers[i].infowindow : infowindow})
+              let marker = this.state.markers[i];
+              marker.infowindow = infowindow;
+              this.setState({...this.state.markers, ...marker});
               window.google.maps.event.addListener(this.state.markers[i], 'click', function() {
                 this.infowindow.close();
               });
             }
           }
-        }
+
+        })
       }
+
       if (!atLeastOne) {
         window.alert('We could not find any locations within that distance!');
       }
+
     }
+
 
 
   // Render App ---------------------
