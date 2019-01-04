@@ -25,6 +25,7 @@ class GoogleMap extends Component {
           section: "coffee",
           near: "seattle",
           query: "best",
+          openNow:1,
           limit: 25,
           v:"20181212"
         }
@@ -96,7 +97,7 @@ class GoogleMap extends Component {
             }
     
             if (largeInfowindow.marker !== marker) {
-              // Clear the infowindow content to give the streetview time to load.
+              // Clear the infowindow content to give the shop details to load.
               largeInfowindow.setContent('');
               largeInfowindow.marker = marker;
     
@@ -118,16 +119,20 @@ class GoogleMap extends Component {
                   let open = place[0].opening_hours.open_now ? 'Open' : 'Closed';
                   let price = place[0].price_level ? "$".repeat(place[0].price_level) : 'Unknown';
     
-                  let imgSrc = place[0].photos[0].getUrl({'maxWidth': 150, 'maxHeight': 150});
+                  let imgSrc = place[0].photos[0].getUrl({'maxWidth': 120, 'maxHeight': 120});
                   let infoWindowContent = `
-                    <div id="photo"><img src= ${imgSrc}></div> 
                     <div>
-                      <div id='shop-name'>${title}</div>
-                      <div><strong>Address: </strong>${address}</div>
-                      <div><strong>Rating: </strong>${rating}/5.0 </div>
-                      <div><strong>Price: </strong>${price} </div>
-                      <div>${open} Now </div>
-                    </div> 
+                      <div id="photo">
+                        <img src= ${imgSrc}>
+                      </div>  
+                      <div id="shop-info">
+                        <div id='shop-name'>${title}</div>
+                        <div><strong>Address: </strong>${address}</div>
+                        <div><strong>Rating: </strong>${rating}/5.0 </div>
+                        <div><strong>Price: </strong>${price} </div>
+                        <div>${open} Now </div>
+                      </div>
+                    </div>
                     `;
     
                     largeInfowindow.setContent(infoWindowContent);
@@ -168,8 +173,9 @@ class GoogleMap extends Component {
     render() {
         return (
             <div id="map" />
-        )
+        );
     }
+    
 }
 
 export default GoogleMap;

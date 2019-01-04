@@ -13,7 +13,7 @@ body {
 .container {
   height: 100vh;
   position: relative;
-  top: 150px;
+  top: 140px;
   bottom:0px;
 }
 
@@ -24,7 +24,6 @@ body {
   padding: 10px 0 0 0;
   text-align: left;
   width: 300px;
-  /* position: fixed; */
 }
 
 #map {
@@ -43,20 +42,21 @@ input {
 }
 
 .head {
-  padding:0 0 0 15px;
-  background-color:	#180f0f;
+  /* padding:0 0 0 15px; */
+  background-color:	#f6f6f6;
   position: fixed;
   z-index: 100;
   width: 100%;
-  height: 150px;
+  height: 140px;
+  /* border-bottom: #4d4646 solid; */
 }
 
 h1 {
   font-family: 'Poiret One', cursive;
   font-weight: bold;
-  color:#e7c85e;
+  color:#4d4646;
   font-size: 60px;
-  margin: 55px 0 10px 0;
+  margin: 55px 0 15px 0;
   padding-left: 25px;
   /* text-align: center; */
 }
@@ -66,7 +66,8 @@ h2 {
   color: #180f0f;
   font-size: 23px;
   margin: 10px 0 5px 0;
-  text-align: center;
+  padding-left: 10px;
+  /* text-align: center; */
 }
 
 h3 {
@@ -74,11 +75,12 @@ h3 {
   color: #180f0f;
   font-size: 20px;
   margin: 10px 0 5px 0;
+  padding-left: 10px;
   /* text-align: center; */
 }
 
 hr.shadow {
-  height: 12px;
+  height: 15px;
   border: 0;
   box-shadow: inset 0 12px 12px -12px rgba(24, 15, 15, 0.5);
   margin:0;
@@ -106,7 +108,14 @@ hr.gradient {
 }
 
 #photo {
-  width: 150px;
+  width: 120px;
+  padding-right:10px; 
+  float:left;
+}
+
+#shop-info{
+  left: 130px; 
+  float:right;
 }
 
 #shop-name {
@@ -116,7 +125,7 @@ hr.gradient {
 }
 
 #search-form {
-  margin: 25px 5px 0 10px;
+  margin: 25px 5px 0 15px;
 }
 
 .search-div {
