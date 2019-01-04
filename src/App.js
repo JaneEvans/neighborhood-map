@@ -19,9 +19,6 @@ class CoffeeApp extends Component {
       }
     };
 
-    // this.handleChange = this.handleChange.bind(this);
-    // this.handleSubmit = this.handleSubmit.bind(this);
-
     this.updateMap = this.updateMap.bind(this);
     this.updateMarkers = this.updateMarkers.bind(this);
     this.updateSearchValues = this.updateSearchValues.bind(this);
@@ -54,7 +51,6 @@ class CoffeeApp extends Component {
   }
 
 
-
   // Render App ---------------------
   render() {
     const {map, markers, searchPlace_marker, searchValues} = this.state;
@@ -65,7 +61,6 @@ class CoffeeApp extends Component {
           <h1>Seattle Coffee Radar</h1>
           <hr className="shadow"/>
         </div>
-        
         <div className="container">
           <div className="options-box">
             <h2>Find Seattle Best Coffee Shop</h2>
@@ -74,12 +69,9 @@ class CoffeeApp extends Component {
               map = {map}
               markers = {markers}
               searchPlace_marker = {searchPlace_marker}
-              
             />
-            
             <h3>Search Your Coffee Shop</h3>
             <hr className="gradient"/>
-
             <SearchForm
               map = {map}
               searchValues={searchValues}
@@ -90,8 +82,6 @@ class CoffeeApp extends Component {
               updateSearchPlace_marker = {this.updateSearchPlace_marker}
             />
           </div>
-
-          {/* <div id="map"/> */}
           <GoogleMap
             updateMap={this.updateMap}
             updateMarkers = {this.updateMarkers}
