@@ -15,7 +15,6 @@ class GoogleMap extends Component {
         this.getCoffeeShops();
     }
 
-    
 
     getCoffeeShops = () => {
         const endPoint = "https://api.foursquare.com/v2/venues/explore?";
@@ -95,7 +94,7 @@ class GoogleMap extends Component {
               marker.setAnimation(window.google.maps.Animation.BOUNCE);
               setTimeout(()=>{marker.setAnimation(null); }, 600);
             }
-    
+            map.setCenter(marker.position);
             if (largeInfowindow.marker !== marker) {
               // Clear the infowindow content to give the shop details to load.
               largeInfowindow.setContent('');
