@@ -87,7 +87,7 @@ class CoffeeApp extends Component {
             updateMarkers = {this.updateMarkers}
           />
           <div id="footer">
-            Copyright (c) 2019 <a href="/"><strong>Seattle Coffee Radar</strong></a> All Rights Reserved.
+            Copyright (c) 2019 <a tabIndex="0" href="./"><strong>Seattle Coffee Radar</strong></a> All Rights Reserved.
           </div>
         </div>
       </div>

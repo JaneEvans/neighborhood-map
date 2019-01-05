@@ -115,21 +115,21 @@ class GoogleMap extends Component {
                   console.log(place[0]);
                   let address = place[0].formatted_address;
                   let rating = place[0].rating;
-                  let open = place[0].opening_hours.open_now ? 'Open' : 'Closed';
+                  let open = place[0].opening_hours ? (place[0].opening_hours.open_now ? 'Open' : 'Closed') : 'Unknown';
                   let price = place[0].price_level ? "$".repeat(place[0].price_level) : 'Unknown';
     
-                  let imgSrc = place[0].photos[0].getUrl({'maxWidth': 120, 'maxHeight': 120});
+                  let imgSrc = place[0].photos ? place[0].photos[0].getUrl({'maxWidth': 120, 'maxHeight': 120}): '' ;
                   let infoWindowContent = `
                     <div>
                       <div id="photo">
-                        <img src= ${imgSrc}>
+                        <img alt = "Image of the coffee shop: ${title}" src= ${imgSrc}>
                       </div>  
                       <div id="shop-info">
-                        <div id='shop-name'>${title}</div>
+                        <div id="shop-name">${title}</div>
                         <div><strong>Address: </strong>${address}</div>
                         <div><strong>Rating: </strong>${rating}/5.0 </div>
                         <div><strong>Price: </strong>${price} </div>
-                        <div>${open} Now </div>
+                        <div><strong>Is open?: </strong> ${open} </div>
                       </div>
                     </div>
                     `;
@@ -171,7 +171,7 @@ class GoogleMap extends Component {
 
     render() {
         return (
-            <div id="map" />
+            <div tabIndex="0" id="map" />
         );
     }
     

@@ -29,8 +29,8 @@ class ShowHideList extends Component {
     render() {
         return(
             <div id="show-hide-listings">
-                <input id="show-listings" type="button" value="Show Best ☕" onClick={this.showListing}/>
-                <input id="hide-listings" type="button" value="Hide All ☕" onClick={this.hideListing}/>
+                <input tabIndex="0" id="show-listings" type="button" value="Show Best ☕" onClick={this.showListing}/>
+                <input tabIndex="0" id="hide-listings" type="button" value="Hide All ☕" onClick={this.hideListing}/>
             </div>
         );
 

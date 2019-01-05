@@ -164,25 +164,25 @@ class SearchForm extends Component {
               {/* <input type="checkbox" name='open_now' defaultChecked/>Open Now */}
               <div className="search-div">
                 <span className="text"> From </span>
-                <input id="search-within-time-text" name='from' type="text" placeholder="Ex: Pike Market" />
+                <input tabIndex="0" id="search-within-time-text" name='from' type="text" placeholder="Ex: Pike Market" />
               </div>
               <div className="search-div">
                 <span className="text"> Transportation </span>
                 <div className="radio-text">
-                  <ul><input type="radio" name='mode' value="WALKING" defaultChecked />🚶 Walk </ul>
-                  <ul><input type="radio" name='mode' value="BICYCLING" />🚲 Bike </ul>
-                  <ul><input type="radio" name='mode' value="DRIVING" />🚗 Drive </ul>
+                  <ul><input tabIndex="0" type="radio" name='mode' value="WALKING" defaultChecked />🚶 Walk </ul>
+                  <ul><input tabIndex="0" type="radio" name='mode' value="BICYCLING" />🚲 Bike </ul>
+                  <ul><input tabIndex="0" type="radio" name='mode' value="DRIVING" />🚗 Drive </ul>
                 </div>
               </div>
               <div className="search-div">
                 <span className="text"> Within </span>
                 <div className="radio-text">
-                  <ul><input type="radio" name='duration' value="5" defaultChecked />5 min </ul>
-                  <ul><input type="radio" name='duration' value="10" />10 min </ul>
-                  <ul><input type="radio" name='duration' value="15" />15 min </ul>
+                  <ul><input tabIndex="0" type="radio" name='duration' value="5" defaultChecked />5 min </ul>
+                  <ul><input tabIndex="0" type="radio" name='duration' value="10" />10 min </ul>
+                  <ul><input tabIndex="0" type="radio" name='duration' value="15" />15 min </ul>
                 </div>
               </div>
-              <button id="search-within-time" >Find Me Coffee</button>
+              <button tabIndex="0" id="search-within-time" >Find Me Coffee</button>
             </form>
         );
     }
