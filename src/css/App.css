@@ -1,6 +1,7 @@
 html,
 body {
   font-family: Arial, sans-serif;
+  width: 100%;
   height: 100%;
   margin: 0;
   padding: 0;
@@ -10,8 +11,44 @@ body {
   height: 100%;
 }
 
+#side-bar-close{
+  padding:8px 16px;
+  font-size: 15px;
+  width:auto;
+  border:none;
+  outline:0;
+}
+
+#side-bar-close-div{
+  width:100%;
+  display: none;
+}
+
+#side-bar-button{
+  border:none;
+  display:inline-block;
+  padding:8px 16px;
+  vertical-align:middle;
+  overflow:hidden;
+  text-decoration:none;
+  color:inherit;
+  background-color:inherit;
+  text-align:center;
+  cursor:pointer;
+  white-space:nowrap;
+  font-size: 22px;
+  height:45px;
+  
+}
+
+#side-bar-button-div{
+  display: none;
+  text-align: right;
+}
+
 .container {
   height: 100vh;
+  width:100%;
   position: relative;
   top: 140px;
   bottom:0px;
@@ -24,13 +61,18 @@ body {
   padding: 10px 0 0 0;
   text-align: left;
   width: 300px;
+  /* position: absolute; */
+
 }
+
+
 
 #map {
   top:0px;
   bottom:0px;
   height: 100vh;
   left: 300px;
+  /* width:100%; */
   padding: 10px 0 0 0;
   /* width: 70%; */
   position: absolute;
@@ -56,9 +98,10 @@ h1 {
   font-weight: bold;
   color:#4d4646;
   font-size: 60px;
-  margin: 55px 0 15px 0;
-  padding-left: 25px;
-  /* text-align: center; */
+  padding: 55px 0 15px 23px;
+  margin: 0;
+  text-transform: uppercase;
+  height:70px;
 }
 
 h2 {
@@ -162,9 +205,47 @@ ul {
   padding: 25px;
   text-align: center;
   text-transform: uppercase;
+  /* position: fixed; */
+  /* width:100%; */
+  bottom: 0;
+  /* top:750px; */
 }
 
 a {
   color: #e7c85e;
   font-weight: bold;
 }
+
+/* 
+responsive 
+*/
+
+
+
+@media screen and (max-width: 640px) {
+  h1 {
+    font-size: 42px;
+    padding: 15px 0 10px 23px;
+  }
+
+  #side-bar {
+    /* display: none; */
+    position: absolute;
+  }
+
+  #map{
+    left:0;
+  }
+
+  #side-bar-close-div{
+    display: block;
+  }
+
+  #side-bar-button-div{
+    display: block;
+    text-align: right;
+  }
+
+}
+
+

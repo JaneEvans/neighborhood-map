@@ -112,7 +112,7 @@ class GoogleMap extends Component {
               const service = new window.google.maps.places.PlacesService(map);
               service.textSearch(request, (place, status)=>{
                 if (status === window.google.maps.places.PlacesServiceStatus.OK){
-                  console.log(place[0]);
+                  // console.log(place[0]);
                   let address = place[0].formatted_address;
                   let rating = place[0].rating;
                   let open = place[0].opening_hours ? (place[0].opening_hours.open_now ? 'Open' : 'Closed') : 'Unknown';

@@ -3,6 +3,7 @@ import './css/App.css';
 import GoogleMap from './GoogleMap';
 import ShowHideList from './ShowHideList';
 import SearchForm from './SearchForm';
+import SideBar from './SideBar';
 
 class CoffeeApp extends Component {
   constructor(props) {
@@ -50,6 +51,10 @@ class CoffeeApp extends Component {
     })
   }
 
+  closeSideBar = () => {
+    document.getElementById("side-bar").style.zIndex = 0;
+}
+
 
   // Render App ---------------------
   render() {
@@ -59,10 +64,16 @@ class CoffeeApp extends Component {
       <div className='canvas'>
         <div className="head">
           <h1>Seattle Coffee Radar</h1>
+          <SideBar
+            closeSideBar={this.closeSideBar}
+          />
           <hr className="shadow"/>
         </div>
         <div className="container">
-          <div className="options-box">
+          <div className="options-box" id="side-bar">
+            <div id='side-bar-close-div'>
+              <button onClick={this.closeSideBar} id="side-bar-close">Close &times;</button>
+            </div>
             <h2>Find Seattle Best Coffee Shop</h2>
             <hr className="gradient"/>
             <ShowHideList
@@ -87,9 +98,10 @@ class CoffeeApp extends Component {
             updateMarkers = {this.updateMarkers}
           />
           <div id="footer">
-            Copyright (c) 2019 <a tabIndex="0" href="./"><strong>Seattle Coffee Radar</strong></a> All Rights Reserved.
+              Copyright (c) 2019 <a tabIndex="0" href="./"><strong>Seattle Coffee Radar</strong></a> All Rights Reserved.
           </div>
         </div>
+
       </div>
     );
   }
