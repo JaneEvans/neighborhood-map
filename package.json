@@ -9,6 +9,7 @@
     "react-dom": "^16.7.0",
     "react-native-hr": "^1.1.4",
     "react-scripts": "2.1.2",
+    "react-service-worker": "^0.1.1",
     "yelp-fusion": "^2.2.1"
   },
   "scripts": {

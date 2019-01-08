@@ -159,7 +159,16 @@ hr.gradient {
   border:none;
   outline:0;
   padding: 5px;
+  -webkit-transition-duration: 0.4s; /* Safari */
+  transition-duration: 0.4s;
 }
+
+.button-icon:hover {
+  background-color: #4d4646;
+  color: white;
+}
+
+
 
 #show-listings {
   width: 48%;
@@ -217,6 +226,12 @@ ul {
 
 #search-within-time-text {
   width: 84%;
+}
+
+#search-within-time{
+  font-family: 'Poiret One', cursive;
+  font-weight: bold;
+  font-size: 15px;
 }
 
 #footer {

@@ -23,7 +23,7 @@ class SideBar extends Component {
     render(){
         return(
             <div id='side-bar-button-div'>
-                <button id="side-bar-button" onClick={this.openSideBar} >☰ 🔍</button>
+                <button id="side-bar-button" tabIndex="0" onClick={this.openSideBar} >🔍</button>
             </div>
             
         );
