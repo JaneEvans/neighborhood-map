@@ -39,7 +39,8 @@ class GoogleMap extends Component {
             coffeeShops: validShops
           }, this.renderGoogleAPI())
         }).catch(e => {
-          console.log(e);
+          // console.log(e);
+          window.alert('ERROR: ' + e);
         })
       }
     
@@ -163,10 +164,15 @@ class GoogleMap extends Component {
       getHTMLScript = (url) => {
         const index = window.document.getElementsByTagName('script')[0];
         const script = window.document.createElement('script');
+
         script.src = url;
         script.async = true;
         script.defer = true;
         index.parentNode.insertBefore(script, index);
+
+        script.onerror = function() {
+          alert("Error loading " + this.src); // Error loading https://example.com/404.js
+        };
       }
 
     render() {
