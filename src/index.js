@@ -2,7 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './css/index.css';
 import CoffeeApp from './App';
-import * as serviceWorker from './serviceWorker';
+// import * as serviceWorker from './serviceWorker';
+import registerServiceWorker  from 'react-service-worker';
 
 ReactDOM.render(<CoffeeApp />, document.getElementById('root'));
 
@@ -10,4 +11,4 @@ ReactDOM.render(<CoffeeApp />, document.getElementById('root'));
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: http://bit.ly/CRA-PWA
 // serviceWorker.unregister();
-serviceWorker.register();
+registerServiceWorker();

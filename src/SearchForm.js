@@ -7,7 +7,7 @@ class SearchForm extends Component {
     
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
-    
+
       }
 
     handleChange = (e)=> {
@@ -98,7 +98,7 @@ class SearchForm extends Component {
         }
 
     }
-    
+
     // This function will go through each of the results, and,
     // if the distance is LESS than the value in the picker, show it on the map.
     displayMarkersWithinTime = (response) => {
