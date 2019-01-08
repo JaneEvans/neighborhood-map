@@ -182,7 +182,7 @@ class SearchForm extends Component {
                   <ul><input tabIndex="0" type="radio" name='duration' value="15" />15 min </ul>
                 </div>
               </div>
-              <button tabIndex="0" id="search-within-time" >Find Me Coffee</button>
+              <button tabIndex="0" className='button-icon' id="search-within-time" >Find Me Coffee</button>
             </form>
         );
     }

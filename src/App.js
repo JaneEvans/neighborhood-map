@@ -17,13 +17,15 @@ class CoffeeApp extends Component {
         duration: "5",
         mode: "WALKING",
         from:"",
-      }
+      },
+      sideBarClass: 'options-box'
     };
 
     this.updateMap = this.updateMap.bind(this);
     this.updateMarkers = this.updateMarkers.bind(this);
     this.updateSearchValues = this.updateSearchValues.bind(this);
     this.updateSearchPlace_marker = this.updateSearchPlace_marker.bind(this);
+    this.updateSideBarClass = this.updateSideBarClass.bind(this);
 
   }
 
@@ -51,29 +53,30 @@ class CoffeeApp extends Component {
     })
   }
 
-  closeSideBar = () => {
-    document.getElementById("side-bar").style.zIndex = 0;
-}
+  updateSideBarClass(sideBarClass) {
+    this.setState({
+      sideBarClass:sideBarClass
+    })
+  }
+
 
 
   // Render App ---------------------
   render() {
-    const {map, markers, searchPlace_marker, searchValues} = this.state;
+    const {map, markers, searchPlace_marker, searchValues, sideBarClass} = this.state;
 
     return (
       <div className='canvas'>
         <div className="head">
           <h1>Seattle Coffee Radar</h1>
           <SideBar
-            closeSideBar={this.closeSideBar}
+            sideBarClass = {sideBarClass}
+            updateSideBarClass = {this.updateSideBarClass}
           />
           <hr className="shadow"/>
         </div>
         <div className="container">
-          <div className="options-box" id="side-bar">
-            <div id='side-bar-close-div'>
-              <button onClick={this.closeSideBar} id="side-bar-close">Close &times;</button>
-            </div>
+          <div className={this.state.sideBarClass} id="side-bar">
             <h2>Find Seattle Best Coffee Shop</h2>
             <hr className="gradient"/>
             <ShowHideList
@@ -97,11 +100,11 @@ class CoffeeApp extends Component {
             updateMap={this.updateMap}
             updateMarkers = {this.updateMarkers}
           />
-          <div id="footer">
-              Copyright (c) 2019 <a tabIndex="0" href="./"><strong>Seattle Coffee Radar</strong></a> All Rights Reserved.
-          </div>
-        </div>
 
+        </div>
+        <div id="footer">
+              Copyright (c) 2019 <a tabIndex="0" href="./"><strong>Seattle Coffee Radar</strong></a> All Rights Reserved.
+        </div>
       </div>
     );
   }

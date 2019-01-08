@@ -11,18 +11,6 @@ body {
   height: 100%;
 }
 
-#side-bar-close{
-  padding:8px 16px;
-  font-size: 15px;
-  width:auto;
-  border:none;
-  outline:0;
-}
-
-#side-bar-close-div{
-  width:100%;
-  display: none;
-}
 
 #side-bar-button{
   border:none;
@@ -38,7 +26,6 @@ body {
   white-space:nowrap;
   font-size: 22px;
   height:45px;
-  
 }
 
 #side-bar-button-div{
@@ -46,31 +33,60 @@ body {
   text-align: right;
 }
 
+
 .container {
   height: 100vh;
+  min-height: 640px;
   width:100%;
   position: relative;
-  top: 140px;
-  bottom:0px;
+  margin-top: 140px;
+  margin-bottom: 10px;
 }
 
 .options-box {
   background:#f6f6f6;
   height: 100vh;
+  min-height: 650px;
   line-height: 35px;
   padding: 10px 0 0 0;
   text-align: left;
   width: 300px;
+  position: absolute;
   /* position: absolute; */
 
 }
 
+.options-box-responsive-open {
+  background:#f6f6f6;
+  height: 100vh;
+  min-height: 650px;
+  line-height: 35px;
+  padding: 10px 0 0 0;
+  text-align: left;
+  width: 300px;
+  position: absolute;
+  display: block;
+  z-index: 10;
+}
 
+.options-box-responsive-close {
+  background:#f6f6f6;
+  height: 100vh;
+  min-height: 650px;
+  line-height: 35px;
+  padding: 10px 0 0 0;
+  text-align: left;
+  width: 300px;
+  position: absolute;
+  display: none;
+  /* z-index: 0; */
+}
 
 #map {
   top:0px;
   bottom:0px;
   height: 100vh;
+  min-height: 640px;
   left: 300px;
   /* width:100%; */
   padding: 10px 0 0 0;
@@ -84,13 +100,12 @@ input {
 }
 
 .head {
-  /* padding:0 0 0 15px; */
   background-color:	#f6f6f6;
+  top:0;
   position: fixed;
   z-index: 100;
   width: 100%;
   height: 140px;
-  /* border-bottom: #4d4646 solid; */
 }
 
 h1 {
@@ -140,13 +155,21 @@ hr.gradient {
   margin:15px 15px 40px 15px;
 }
 
+.button-icon {
+  border:none;
+  outline:0;
+  padding: 5px;
+}
+
 #show-listings {
   width: 48%;
+  font-size: 15px;
   margin-right: 5px;
 }
 
 #hide-listings {
   width: 48%;
+  font-size: 15px;
   margin-left: 5px;
 }
 
@@ -202,13 +225,13 @@ ul {
   font-family: 'Poiret One', cursive;
   font-size: 8pt;
   letter-spacing: 1px;
-  padding: 25px;
+  padding: 10px 0 10px 0;
   text-align: center;
   text-transform: uppercase;
   /* position: fixed; */
-  /* width:100%; */
+  width:100%;
   bottom: 0;
-  /* top:750px; */
+  height: 25px;
 }
 
 a {
@@ -228,17 +251,12 @@ responsive
     padding: 15px 0 10px 23px;
   }
 
-  #side-bar {
-    /* display: none; */
-    position: absolute;
+  .options-box {
+    display: none;
   }
 
   #map{
     left:0;
-  }
-
-  #side-bar-close-div{
-    display: block;
   }
 
   #side-bar-button-div{
@@ -246,6 +264,13 @@ responsive
     text-align: right;
   }
 
+}
+
+@media screen and (min-width: 641px) {
+  .options-box-responsive-close {
+    display: block;
+    z-index: 10;
+  }
 }
 
 
