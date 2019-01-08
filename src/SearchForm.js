@@ -90,6 +90,7 @@ class SearchForm extends Component {
         }, (response, status) => {
             if (status !== window.google.maps.DistanceMatrixStatus.OK) {
             window.alert('Error was: ' + status);
+            console.log(window.google.maps.DistanceMatrixService);
             } else {
             this.displayMarkersWithinTime(response);
             // console.log(response);
