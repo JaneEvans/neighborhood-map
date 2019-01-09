@@ -33,8 +33,8 @@ See the section about [deployment](https://facebook.github.io/create-react-app/d
 
 * Coffee Shop list is from [Foursquare API](https://developer.foursquare.com/docs/api), using [`explore` Endpoint](https://developer.foursquare.com/docs/api/venues/explore)
 * Map is featuring with [Google Maps JavaScript API](https://console.cloud.google.com/apis/library/maps-backend.googleapis.com?q=maps%20java&id=fd73ab50-9916-4cde-a0f6-dc8be0a0d425&project=udacity-maps-project-225723)
-* Coffee Shop detailed data (including shop photo, formatted address, Rating, price, open status), and textual search autocomplete service are from [Google Places API](https://console.cloud.google.com/apis/library/places-backend.googleapis.com?q=places&id=ecefdd63-ee2b-4751-b6c3-8e9113791baf&project=udacity-maps-project-225723)
-* Searching place distance/duration data, including travel mode and duration, are from [Google Distance Matrix API](https://console.cloud.google.com/apis/library/distance-matrix-backend.googleapis.com?q=dist&id=82aa0d98-49bb-4855-9da9-efde390a3834&project=udacity-maps-project-225723)
+* Coffee Shop detailed data (including shop photo, formatted address, rating, price, open status), and textual search autocomplete service are from [Google Places API](https://console.cloud.google.com/apis/library/places-backend.googleapis.com?q=places&id=ecefdd63-ee2b-4751-b6c3-8e9113791baf&project=udacity-maps-project-225723)
+* Searching place distance data, including travel mode and duration, are from [Google Distance Matrix API](https://console.cloud.google.com/apis/library/distance-matrix-backend.googleapis.com?q=dist&id=82aa0d98-49bb-4855-9da9-efde390a3834&project=udacity-maps-project-225723)
 
 
 
