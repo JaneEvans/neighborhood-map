@@ -48,7 +48,7 @@ class GoogleMap extends Component {
       initMap = () => {
         const map = new window.google.maps.Map(document.getElementById('map'), {
           center: {lat: 47.6079958, lng: -122.3320709},
-          zoom: 14
+          zoom: 13
         });
 
         this.props.updateMap(map);
