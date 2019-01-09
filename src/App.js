@@ -106,7 +106,6 @@ class CoffeeApp extends Component {
             <h4>Coffee Shop List</h4>
             <ShopListView
               markers={markers}
-              markerIDs={markerIDs}
               filteredMarkerIDs = {filteredMarkerIDs}
             />
             <h3>Search Your Coffee Shop</h3>

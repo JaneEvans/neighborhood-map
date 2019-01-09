@@ -11,7 +11,7 @@ class ShopListView extends Component {
                 {this.props.markers
                     .filter(marker => this.props.filteredMarkerIDs.includes(marker.id))
                     .map(marker => (
-                    <ul key= {marker.id}><a href="#" onClick={()=>{window.google.maps.event.trigger(marker, 'click')}}>{marker.title}</a></ul>
+                    <ul key= {marker.id}><a tabIndex="0" href="#" onClick={()=>{window.google.maps.event.trigger(marker, 'click')}}>{marker.title}</a></ul>
                 )
                     )}
                 <ul key={'null'}></ul>
