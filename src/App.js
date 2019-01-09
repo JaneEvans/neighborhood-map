@@ -4,6 +4,7 @@ import GoogleMap from './GoogleMap';
 import ShowHideList from './ShowHideList';
 import SearchForm from './SearchForm';
 import SideBar from './SideBar';
+import ShopListView from './ShopListView';
 
 class CoffeeApp extends Component {
   constructor(props) {
@@ -83,6 +84,10 @@ class CoffeeApp extends Component {
               map = {map}
               markers = {markers}
               searchPlace_marker = {searchPlace_marker}
+            />
+            <h4>Coffee Shop List</h4>
+            <ShopListView
+              markers={markers}
             />
             <h3>Search Your Coffee Shop</h3>
             <hr className="gradient"/>
