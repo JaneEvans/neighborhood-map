@@ -111,7 +111,7 @@ class SearchForm extends Component {
         // Then, make sure at least 1 result was found.
 
         let atLeastOne = false;
-
+        let markerIDs = [];
         for (let i = 0; i < origins.length; i++) {
             let results = response.rows[i].elements;
             // console.log(results);
@@ -131,6 +131,7 @@ class SearchForm extends Component {
                     if (duration <= maxDuration) {
                         //the origin[i] should = the markers[i]
                         this.props.markers[i].setMap(this.props.map);
+                        markerIDs.push(this.props.markers[i].id);
                         atLeastOne = true;
                         // console.log(this.props.markers[i])
                         // Create a mini infowindow to open immediately and contain the
@@ -149,6 +150,7 @@ class SearchForm extends Component {
                             this.infowindow.close();
                         });
                     }
+                    this.props.updateFilteredMarkerIDs(markerIDs);
                 }
             })
         }

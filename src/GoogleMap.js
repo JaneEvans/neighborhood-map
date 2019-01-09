@@ -55,7 +55,8 @@ class GoogleMap extends Component {
 
         const largeInfowindow = new window.google.maps.InfoWindow();
 
-        let markers = []
+        let markers = [];
+        let markerIDs = [];
         // Create dynamic markers on initialize.
         this.state.coffeeShops.map(coffeeShop => {
           let position = {lat:coffeeShop.venue.location.lat, lng:coffeeShop.venue.location.lng};
@@ -83,6 +84,7 @@ class GoogleMap extends Component {
           })
 
           markers.push(marker);
+          markerIDs.push(marker.id);
           
           // Create an onclick event to open an infowindow at each marker.
           // We only allow one infowindow which will open at the marker that is clicked, 
@@ -150,10 +152,11 @@ class GoogleMap extends Component {
               largeInfowindow.open(map, marker);
             }
           });
-    
         });
         
         this.props.updateMarkers(markers);
+        this.props.updateMarkerIDs(markerIDs);
+        this.props.updateFilteredMarkerIDs(markerIDs);
       }
     
       renderGoogleAPI = () => {

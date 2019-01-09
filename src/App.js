@@ -13,6 +13,8 @@ class CoffeeApp extends Component {
     this.state = {
       map:'',
       markers:[],
+      markerIDs:[],
+      filteredMarkerIDs:[],
       searchPlace_marker:null,
       searchValues:{
         duration: "5",
@@ -24,6 +26,8 @@ class CoffeeApp extends Component {
 
     this.updateMap = this.updateMap.bind(this);
     this.updateMarkers = this.updateMarkers.bind(this);
+    this.updateMarkerIDs = this.updateMarkerIDs.bind(this);
+    this.updateFilteredMarkerIDs = this.updateFilteredMarkerIDs.bind(this);
     this.updateSearchValues = this.updateSearchValues.bind(this);
     this.updateSearchPlace_marker = this.updateSearchPlace_marker.bind(this);
     this.updateSideBarClass = this.updateSideBarClass.bind(this);
@@ -39,6 +43,18 @@ class CoffeeApp extends Component {
   updateMarkers(markers) {
     this.setState({
       markers: markers
+    });
+  }
+
+  updateMarkerIDs(markerIDs) {
+    this.setState({
+      markerIDs: markerIDs
+    });
+  }
+
+  updateFilteredMarkerIDs(filteredMarkerIDs) {
+    this.setState({
+      filteredMarkerIDs: filteredMarkerIDs
     });
   }
 
@@ -64,7 +80,7 @@ class CoffeeApp extends Component {
 
   // Render App ---------------------
   render() {
-    const {map, markers, searchPlace_marker, searchValues, sideBarClass} = this.state;
+    const {map, markers, markerIDs,filteredMarkerIDs, searchPlace_marker, searchValues, sideBarClass} = this.state;
 
     return (
       <div className='canvas'>
@@ -84,10 +100,14 @@ class CoffeeApp extends Component {
               map = {map}
               markers = {markers}
               searchPlace_marker = {searchPlace_marker}
+              markerIDs = {markerIDs}
+              updateFilteredMarkerIDs = {this.updateFilteredMarkerIDs}
             />
             <h4>Coffee Shop List</h4>
             <ShopListView
               markers={markers}
+              markerIDs={markerIDs}
+              filteredMarkerIDs = {filteredMarkerIDs}
             />
             <h3>Search Your Coffee Shop</h3>
             <hr className="gradient"/>
@@ -96,14 +116,16 @@ class CoffeeApp extends Component {
               searchValues={searchValues}
               searchPlace_marker={searchPlace_marker}
               markers = {markers}
-              updateMarkers = {this.updateMarkers}
               updateSearchValues={this.updateSearchValues}
               updateSearchPlace_marker = {this.updateSearchPlace_marker}
+              updateFilteredMarkerIDs = {this.updateFilteredMarkerIDs}
             />
           </div>
           <GoogleMap
             updateMap={this.updateMap}
             updateMarkers = {this.updateMarkers}
+            updateMarkerIDs = {this.updateMarkerIDs}
+            updateFilteredMarkerIDs = {this.updateFilteredMarkerIDs}
           />
 
         </div>

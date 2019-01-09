@@ -4,11 +4,6 @@ import './css/App.css';
 
 class SideBar extends Component {
     openSideBar = () => {
-        // document.getElementById("side-bar").style.zIndex = 10;
-        // document.getElementById("side-bar").style.display = 'block';
-        // document.getElementById("side-bar").setAttribute(
-        //     'style', "z-index: 10; display:block;"
-        // )
         let sideBarClass = this.props.sideBarClass;
 
         if (sideBarClass === 'options-box-responsive-open'){
@@ -19,13 +14,13 @@ class SideBar extends Component {
 
         this.props.updateSideBarClass(sideBarClass);
     }
-      
+
     render(){
         return(
             <div id='side-bar-button-div'>
                 <button id="side-bar-button" tabIndex="0" onClick={this.openSideBar} >🔍</button>
             </div>
-            
+
         );
     }
 }
