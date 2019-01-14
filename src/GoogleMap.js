@@ -24,7 +24,6 @@ class GoogleMap extends Component {
           section: "coffee",
           near: "seattle",
           query: "best",
-          openNow:1,
           limit: 25,
           v:"20181212"
         }
